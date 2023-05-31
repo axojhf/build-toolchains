@@ -125,7 +125,7 @@ jobs:
           pacman -S --noconfirm mingw-w64-x86_64-glib2 mingw-w64-x86_64-pixman python-setuptools
           pacman -S --noconfirm mingw-w64-x86_64-gtk3 mingw-w64-x86_64-SDL2 mingw-w64-x86_64-libslirp
           cd /c/qemu
-          ./configure --target-list=riscv32-softmmu --prefix="/c/riscv-qemu/" --enable-sdl --enable-gtk
+          ./configure --target-list=riscv32-softmmu --prefix="/c/riscv-qemu/" --enable-gcrypt --enable-debug --enable-sanitizers --disable-strip --disable-user --disable-capstone --disable-vnc --disable-sdl --disable-gtk
           make -j $(nproc) && make install
       - name: Package Directories
         run: |
