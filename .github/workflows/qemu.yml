@@ -3,10 +3,10 @@ name: qemu Build
 on:
   push:
     branches:
-      - main
+      - qemu
 jobs:
   qemu-build:
-    name: qemu rv32imc Build
+    name: qemu riscv32 user Build
     runs-on: ubuntu-22.04
     steps:
       - name: Init
