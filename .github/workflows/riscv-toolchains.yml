@@ -11,10 +11,10 @@ jobs:
     steps:
       - name: Init
         run: |
-          sudo apt-get install p7zip autoconf automake autotools-dev curl python3 libmpc-dev libmpfr-dev libgmp-dev gawk build-essential bison flex texinfo gperf libtool patchutils bc zlib1g-dev libexpat-dev ninja-build
+          sudo apt install -y p7zip autoconf automake autotools-dev curl python3 libmpc-dev libmpfr-dev libgmp-dev gawk build-essential bison flex texinfo gperf libtool patchutils bc zlib1g-dev libexpat-dev ninja-build
       - name: Init
         run: |
-          git clone -depth=1 --recursive https://github.com/riscv/riscv-gnu-toolchain && cd riscv-gnu-toolchain
+          git clone --depth=1 --recursive https://github.com/riscv/riscv-gnu-toolchain && cd riscv-gnu-toolchain
           ./configure --prefix="$PWD/opt-riscv/"
           make
       - name: Package Directories
