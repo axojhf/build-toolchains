@@ -15,6 +15,7 @@ jobs:
       - name: Init
         run: |
           git clone --depth=1 --recursive https://github.com/riscv/riscv-gnu-toolchain && cd riscv-gnu-toolchain
+          rm -r -f ./musl && git clone --depth=1 https://github.com/axojhf/mirrormusl.git -b 1.2.4 musl
           ./configure --prefix="$PWD/opt-riscv/" --with-arch=rv32imc
           make
       - name: Package Directories
