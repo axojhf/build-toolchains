@@ -6,8 +6,8 @@ on:
       - main
 jobs:
   risc-v-toolchains-build:
-    name: risc-v-toolchains Build
-    runs-on: ubuntu-latest
+    name: risc-v-toolchains rv32imc Build
+    runs-on: ubuntu-22.04
     steps:
       - name: Init
         run: |
@@ -15,7 +15,7 @@ jobs:
       - name: Init
         run: |
           git clone --depth=1 --recursive https://github.com/riscv/riscv-gnu-toolchain && cd riscv-gnu-toolchain
-          ./configure --prefix="$PWD/opt-riscv/"
+          ./configure --prefix="$PWD/opt-riscv/" --with-arch=rv32imc
           make
       - name: Package Directories
         run: |
