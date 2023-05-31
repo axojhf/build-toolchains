@@ -69,11 +69,9 @@ jobs:
           msystem: mingw64
       - shell: msys2 {0}
         run: |
-          pacman -Syu
-          pacman -S --noconfirm perl git
-          pacman -S base-devel mingw-w64-x86_64-toolchain git python ninja
-          pacman -S mingw-w64-x86_64-glib2 mingw-w64-x86_64-pixman python-setuptools
-          pacman -S mingw-w64-x86_64-gtk3 mingw-w64-x86_64-SDL2 mingw-w64-x86_64-libslirp
+          pacman -S --noconfirm base-devel mingw-w64-x86_64-toolchain git python ninja
+          pacman -S --noconfirm mingw-w64-x86_64-glib2 mingw-w64-x86_64-pixman python-setuptools
+          pacman -S --noconfirm mingw-w64-x86_64-gtk3 mingw-w64-x86_64-SDL2 mingw-w64-x86_64-libslirp
           cd /c/qemu
           ./configure --target-list=riscv32-softmmu,riscv32-linux-user --prefix="/c/riscv-qemu/" --enable-sdl --enable-gtk
           make -j $(nproc) && make install
