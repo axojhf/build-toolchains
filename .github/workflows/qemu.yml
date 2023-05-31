@@ -30,3 +30,29 @@ jobs:
       #     tag_name: riscv-toolchains
       #     files: |
       #       riscv-toolchains.7z
+
+  win-qemu-build:
+    name: Windows qemu riscv32 user Build
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Init
+        run: |
+          sudo apt install -y p7zip autoconf automake autotools-dev curl python3 libmpc-dev libmpfr-dev libgmp-dev gawk build-essential bison flex texinfo gperf libtool patchutils bc zlib1g-dev libexpat-dev ninja-build
+      - name: Build
+        run: |
+          git clone --depth=1 --recursive https://repo.or.cz/qemu/ar7.git && cd ar7
+          ./configure --target-list=riscv32-softmmu,riscv32-linux-user --prefix="$PWD/riscv-qemu/" --cross-prefix=amd64-mingw32msvc-
+          make -j $(nproc) && make install
+      - name: Package Directories
+        run: |
+          7z a win-riscv32-qemu.7z ./qemu/riscv-qemu
+      - uses: actions/upload-artifact@v3
+        with:
+          name: win-riscv32-qemu
+          path: win-riscv32-qemu.7z
+      # - name: Update Cpr Release
+      #   uses: softprops/action-gh-release@v1
+      #   with:
+      #     tag_name: riscv-toolchains
+      #     files: |
+      #       riscv-toolchains.7z
