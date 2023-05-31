@@ -57,13 +57,39 @@ jobs:
       #     files: |
       #       riscv-toolchains.7z
 
-  msys2-qemu-build:
-    name: Windows MSYS2 qemu riscv32 user Build
+  # msys2-qemu-build:
+  #   name: Windows MSYS2 qemu riscv32 user Build
+  #   runs-on: windows-latest
+  #   steps:
+  #     - name: Set Mingw64
+  #       run: |
+  #         cd C:/ ; git clone --depth=1 --recursive https://repo.or.cz/qemu/ar7.git qemu
+  #     - uses: msys2/setup-msys2@v2
+  #       with:
+  #         msystem: mingw64
+  #     - shell: msys2 {0}
+  #       run: |
+  #         pacman -S --noconfirm base-devel mingw-w64-x86_64-toolchain git python ninja
+  #         pacman -S --noconfirm mingw-w64-x86_64-glib2 mingw-w64-x86_64-pixman python-setuptools
+  #         pacman -S --noconfirm mingw-w64-x86_64-gtk3 mingw-w64-x86_64-SDL2 mingw-w64-x86_64-libslirp
+  #         cd /c/qemu
+  #         ./configure --target-list=riscv32-softmmu,riscv32-linux-user --prefix="/c/riscv-qemu/" --enable-sdl --enable-gtk
+  #         make -j $(nproc) && make install
+  #     - name: Package Directories
+  #       run: |
+  #         7z a win-riscv32-qemu.7z C:\riscv-qemu
+  #     - uses: actions/upload-artifact@v3
+  #       with:
+  #         name: win-riscv32-qemu
+  #         path: win-riscv32-qemu.7z
+
+  msys2-esp-qemu-build:
+    name: Windows MSYS2 ESP qemu riscv32 user Build
     runs-on: windows-latest
     steps:
       - name: Set Mingw64
         run: |
-          cd C:/ ; git clone --depth=1 --recursive https://repo.or.cz/qemu/ar7.git qemu
+          cd C:/ ; git clone --depth=1 --recursive https://github.com/espressif/qemu qemu
       - uses: msys2/setup-msys2@v2
         with:
           msystem: mingw64
@@ -73,12 +99,12 @@ jobs:
           pacman -S --noconfirm mingw-w64-x86_64-glib2 mingw-w64-x86_64-pixman python-setuptools
           pacman -S --noconfirm mingw-w64-x86_64-gtk3 mingw-w64-x86_64-SDL2 mingw-w64-x86_64-libslirp
           cd /c/qemu
-          ./configure --target-list=riscv32-softmmu,riscv32-linux-user --prefix="/c/riscv-qemu/" --enable-sdl --enable-gtk
+          ./configure --prefix="/c/riscv-qemu/" --enable-sdl --enable-gtk
           make -j $(nproc) && make install
       - name: Package Directories
         run: |
-          7z a win-riscv32-qemu.7z C:\riscv-qemu
+          7z a win-esp-riscv32-qemu.7z C:\riscv-qemu
       - uses: actions/upload-artifact@v3
         with:
-          name: win-riscv32-qemu
-          path: win-riscv32-qemu.7z
+          name: win-esp-riscv32-qemu
+          path: win-esp-riscv32-qemu.7z
