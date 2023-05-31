@@ -31,28 +31,56 @@ jobs:
       #     files: |
       #       riscv-toolchains.7z
 
-  win-qemu-build:
-    name: Windows qemu riscv32 user Build
-    runs-on: ubuntu-22.04
-    steps:
-      - name: Init
-        run: |
-          sudo apt install -y p7zip autoconf automake autotools-dev curl python3 libmpc-dev libmpfr-dev libgmp-dev gawk build-essential bison flex texinfo gperf libtool patchutils bc zlib1g-dev libexpat-dev ninja-build
-      - name: Build
-        run: |
-          git clone --depth=1 --recursive https://repo.or.cz/qemu/ar7.git && cd ar7
-          ./configure --target-list=riscv32-softmmu,riscv32-linux-user --prefix="$PWD/riscv-qemu/" --cross-prefix=amd64-mingw32msvc-
-          make -j $(nproc) && make install
-      - name: Package Directories
-        run: |
-          7z a win-riscv32-qemu.7z ./qemu/riscv-qemu
-      - uses: actions/upload-artifact@v3
-        with:
-          name: win-riscv32-qemu
-          path: win-riscv32-qemu.7z
+  # win-qemu-build:
+  #   name: Windows qemu riscv32 user Build
+  #   runs-on: ubuntu-22.04
+  #   steps:
+  #     - name: Init
+  #       run: |
+  #         sudo apt install -y p7zip autoconf automake autotools-dev curl python3 libmpc-dev libmpfr-dev libgmp-dev gawk build-essential bison flex texinfo gperf libtool patchutils bc zlib1g-dev libexpat-dev ninja-build
+  #     - name: Build
+  #       run: |
+  #         git clone --depth=1 --recursive https://repo.or.cz/qemu/ar7.git && cd ar7
+  #         ./configure --target-list=riscv32-softmmu,riscv32-linux-user --prefix="$PWD/riscv-qemu/" --cross-prefix=amd64-mingw32msvc-
+  #         make -j $(nproc) && make install
+  #     - name: Package Directories
+  #       run: |
+  #         7z a win-riscv32-qemu.7z ./qemu/riscv-qemu
+  #     - uses: actions/upload-artifact@v3
+  #       with:
+  #         name: win-riscv32-qemu
+  #         path: win-riscv32-qemu.7z
       # - name: Update Cpr Release
       #   uses: softprops/action-gh-release@v1
       #   with:
       #     tag_name: riscv-toolchains
       #     files: |
       #       riscv-toolchains.7z
+
+  msys2-qemu-build:
+    name: Windows MSYS2 qemu riscv32 user Build
+    runs-on: windows-latest
+    steps:
+      - name: Set Mingw64
+        run: |
+          cd C:/ ; git clone --depth=1 --recursive https://repo.or.cz/qemu/ar7.git qemu
+      - uses: msys2/setup-msys2@v2
+        with:
+          msystem: mingw64
+      - shell: msys2 {0}
+        run: |
+          pacman -Syu
+          pacman -S --noconfirm perl git
+          pacman -S base-devel mingw-w64-x86_64-toolchain git python ninja
+          pacman -S mingw-w64-x86_64-glib2 mingw-w64-x86_64-pixman python-setuptools
+          pacman -S mingw-w64-x86_64-gtk3 mingw-w64-x86_64-SDL2 mingw-w64-x86_64-libslirp
+          cd /c/qemu
+          ./configure --target-list=riscv32-softmmu,riscv32-linux-user --prefix="/c/riscv-qemu/" --enable-sdl --enable-gtk
+          make -j $(nproc) && make install
+      - name: Package Directories
+        run: |
+          7z a win-riscv32-qemu.7z C:\riscv-qemu
+      - uses: actions/upload-artifact@v3
+        with:
+          name: win-riscv32-qemu
+          path: win-riscv32-qemu.7z
